@@ -1,13 +1,33 @@
 <?php
-	//接受请求 响应数据  json	
+	error_reporting('E_ALL &  ~E_NOTICE');
+	
+	//业务逻辑异常
+	try{
+		if(empty($_POST['username'])){
+			throw new Exception('缺失username必填参数');	
+		}
 
-	$pdo =  new PDO('mysql:host=localhost;dbname=api;charset=utf8','root','');
+		if(empty($_POST['password'])){
+			throw new Exception('缺失password必填参数');
+		}
+	}catch(Exception $e){
+		echo resp([],401,$e->getMessage());
+		exit;
+	}	
 
-	$stmt = $pdo->query('select * from user');
+	//处理服务器未知异常
+	try{
+		$pdo =  new PDO('mysql:host=localhost;dbname=api;charset=utf8','root','');
 
-	$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		$stmt = $pdo->query('select * from user');
 
+		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+	}catch(Exception $e){
+		echo resp($data,401,$e->getMessage());
+		exit;
+	}
+	
 		
 	//定义标准化产出数据格式函数
 	function resp($data,$status,$message){

@@ -6,9 +6,11 @@
 	//请求的api地址
 	$url = 'http://localhost/ruanjian_02/api/server/server.php';
 
-
 	$curl = new Curl\Curl();
-	$curl->get($url);
+	$curl->post($url, array(
+	   	'username'=>'xuanqiyan',
+	    'password'=>'123'
+	));
 
 	if ($curl->error) {
 	    echo $curl->error_code;
